@@ -101,7 +101,7 @@ if st.session_state.get("authentication_status"):
             with st.spinner("DeepTrace skanuje wzorce błędów..."):
                 try:
                     response = client.chat.completions.create(
-                        model="llama-3.2-90b-vision-preview",
+                        model="llama-3.3-70b-versatile",
                         messages=[{
                             "role": "system",
                             "content": "Jesteś Architektem EduAI DeepTrace. Twoim celem jest optymalizacja ludzkiego intelektu. Analizuj błędy na zdjęciach i w tekście, nie podawaj gotowych odpowiedzi, zmuszaj do myślenia sokratejskimi pytaniami. Bądź wizjonerski i luksusowy w komunikacji."
