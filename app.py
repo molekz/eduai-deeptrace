@@ -1,4 +1,30 @@
 import streamlit as st
+st.set_page_config(page_title="DeepTrace", layout="centered")
+
+# --- CUSTOM CSS DLA TELEFONU ---
+st.markdown("""
+    <style>
+    /* Usuwamy zbędne odstępy na górze */
+    .block-container {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    /* Powiększamy przyciski dla palców */
+    .stButton>button {
+        width: 100%;
+        height: 3em;
+        font-size: 18px;
+        border-radius: 10px;
+    }
+    /* Styl dla czatu, żeby nie uciekał */
+    .stChatMessage {
+        font-size: 14px;
+        border-radius: 15px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 import streamlit_authenticator as stauth
 from openai import OpenAI
 import uuid
@@ -6,7 +32,7 @@ import base64
 
 # --- 1. KONFIGURACJA STRONY ---
 if "page_config_set" not in st.session_state:
-    st.set_page_config(page_title="EduAI DeepTrace", page_icon="🦖", layout="wide")
+    st.set_page_config(page_title="EduAI Premium", page_icon="🦖", layout="centered")
     st.session_state.page_config_set = True
 
 # Funkcja do czytania obrazu przez AI
