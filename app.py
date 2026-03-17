@@ -6,17 +6,21 @@ import base64
 st.set_page_config(page_title="DeepTrace", page_icon="🦖", layout="centered")
 
 # --- 2. POPRAWIONY DESIGN MOBILE-FIRST ---
-background: radial-gradient(circle at top, #1a1a1a, #000000) !important; 
+st.markdown("""
+    <style>
+    /* Główne tło i reset kolorów */
+    .stApp { 
+        background: radial-gradient(circle at top, #1a1a1a, #000000) !important; 
         color: #ffffff !important; 
     }
 
-    /* 2. WYMUSZENIE BIAŁEGO TEKSTU W CZACIE (To naprawi Twój błąd) */
+    /* WYMUSZENIE BIAŁEGO TEKSTU W CZACIE */
     .stChatMessage, .stChatMessage div, .stChatMessage p {
         color: #ffffff !important;
         font-family: 'Inter', sans-serif !important;
     }
 
-    /* 3. Tytuł skalowalny (Mobile-first) */
+    /* Tytuł skalowalny */
     .main-title { 
         font-family: 'Inter', sans-serif; 
         font-size: clamp(1.8rem, 10vw, 3.5rem);
@@ -28,7 +32,7 @@ background: radial-gradient(circle at top, #1a1a1a, #000000) !important;
         margin-bottom: 15px; 
     }
 
-    /* 4. Styl bąbelków czatu - luksusowy ciemny szary */
+    /* Styl bąbelków czatu */
     [data-testid="stChatMessageAssistant"] {
         background-color: #111111 !important;
         border: 1px solid #d97706 !important;
@@ -41,7 +45,7 @@ background: radial-gradient(circle at top, #1a1a1a, #000000) !important;
         border-radius: 15px !important;
     }
 
-    /* 5. Przycisk - złoty, widoczny na telefonie */
+    /* Przycisk złoty */
     .stButton>button { 
         width: 100%; 
         background: #fbbf24 !important; 
@@ -52,14 +56,14 @@ background: radial-gradient(circle at top, #1a1a1a, #000000) !important;
         height: 50px !important;
     }
 
-    /* 6. Naprawa pola tekstowego na dole */
+    /* Pole tekstowe */
     .stChatInput textarea {
         color: #ffffff !important;
         background-color: #1a1a1a !important;
         border: 1px solid #333 !important;
     }
 
-    /* Ukrycie zbędnych elementów Streamlit */
+    /* Ukrycie elementów Streamlit */
     #MainMenu, footer, header { visibility: hidden; }
     .block-container { padding-top: 2rem !important; }
     </style>
