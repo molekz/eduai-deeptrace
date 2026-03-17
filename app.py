@@ -5,13 +5,63 @@ import base64
 # --- 1. KONFIGURACJA STRONY ---
 st.set_page_config(page_title="DeepTrace", page_icon="🦖", layout="centered")
 
-# --- 2. TWÓJ LUKSUSOWY CSS ---
+# --- 2. POPRAWIONY DESIGN MOBILE-FIRST ---
 st.markdown("""
     <style>
-    .stApp { background: radial-gradient(circle at center, #1a1a1a, #050505); color: #e5e5e5; }
-    .main-title { font-family: 'Georgia', serif; font-size: 3.5rem; background: linear-gradient(90deg, #fbbf24, #d97706, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; margin-bottom: 20px; }
-    .stButton>button { width: 100%; height: 3em; background: transparent !important; color: #fbbf24 !important; border: 1px solid #fbbf24 !important; border-radius: 10px; font-weight: bold; }
-    .stButton>button:hover { background: #fbbf24 !important; color: #000 !important; box-shadow: 0 0 20px rgba(251, 191, 36, 0.4); }
+    /* Usuwamy gigantyczne marginesy Streamlit na telefonie */
+    .block-container { padding-top: 1.5rem !important; padding-bottom: 1rem !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+    
+    /* Tło z głębokim gradientem */
+    .stApp { background: radial-gradient(circle at top, #1a1a1a, #000000); color: #e5e5e5; }
+    
+    /* Napis DeepTrace dopasowany do ekranu telefonu */
+    .main-title { 
+        font-family: 'Inter', sans-serif; 
+        font-size: clamp(2rem, 8vw, 3.5rem); /* Skaluje się zależnie od ekranu */
+        background: linear-gradient(180deg, #fbbf24, #d97706); 
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent; 
+        text-align: center; 
+        font-weight: 900;
+        letter-spacing: -1px;
+        margin-bottom: 10px; 
+    }
+    
+    /* Naprawiamy wygląd inputów na mobile */
+    .stTextInput>div>div>input {
+        background-color: #121212 !important;
+        color: #fbbf24 !important;
+        border: 1px solid #333 !important;
+        border-radius: 12px !important;
+        height: 45px;
+    }
+
+    /* Luksusowy przycisk - pełna szerokość na telefonie */
+    .stButton>button { 
+        width: 100%; 
+        background: #fbbf24 !important; 
+        color: #000 !important; 
+        border: none !important;
+        border-radius: 12px !important; 
+        font-weight: 800 !important;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        height: 50px !important;
+        transition: 0.3s;
+    }
+    
+    /* Ukrywamy zbędne elementy Streamlit, żeby nie było widać, że to darmowy hosting */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    
+    /* Styl bąbelków czatu - mniejsza czcionka na telefon */
+    .stChatMessage { 
+        background-color: #1a1a1a !important; 
+        border: 1px solid #333 !important;
+        border-radius: 15px !important;
+        font-size: 14px !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 
