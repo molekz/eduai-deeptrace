@@ -49,7 +49,7 @@ credentials = {
 }
 
 import streamlit as st
-from streamlit_firebase_auth import firebase_auth
+from streamlit_firebase import firebase_auth
 
 # TWOJE DIAMENTY Z FIREBASE
 config = {
