@@ -6,62 +6,62 @@ import base64
 st.set_page_config(page_title="DeepTrace", page_icon="🦖", layout="centered")
 
 # --- 2. POPRAWIONY DESIGN MOBILE-FIRST ---
-st.markdown("""
-    <style>
-    /* Usuwamy gigantyczne marginesy Streamlit na telefonie */
-    .block-container { padding-top: 1.5rem !important; padding-bottom: 1rem !important; padding-left: 1rem !important; padding-right: 1rem !important; }
-    
-    /* Tło z głębokim gradientem */
-    .stApp { background: radial-gradient(circle at top, #1a1a1a, #000000); color: #e5e5e5; }
-    
-    /* Napis DeepTrace dopasowany do ekranu telefonu */
+background: radial-gradient(circle at top, #1a1a1a, #000000) !important; 
+        color: #ffffff !important; 
+    }
+
+    /* 2. WYMUSZENIE BIAŁEGO TEKSTU W CZACIE (To naprawi Twój błąd) */
+    .stChatMessage, .stChatMessage div, .stChatMessage p {
+        color: #ffffff !important;
+        font-family: 'Inter', sans-serif !important;
+    }
+
+    /* 3. Tytuł skalowalny (Mobile-first) */
     .main-title { 
         font-family: 'Inter', sans-serif; 
-        font-size: clamp(2rem, 8vw, 3.5rem); /* Skaluje się zależnie od ekranu */
+        font-size: clamp(1.8rem, 10vw, 3.5rem);
         background: linear-gradient(180deg, #fbbf24, #d97706); 
         -webkit-background-clip: text; 
         -webkit-text-fill-color: transparent; 
         text-align: center; 
         font-weight: 900;
-        letter-spacing: -1px;
-        margin-bottom: 10px; 
-    }
-    
-    /* Naprawiamy wygląd inputów na mobile */
-    .stTextInput>div>div>input {
-        background-color: #121212 !important;
-        color: #fbbf24 !important;
-        border: 1px solid #333 !important;
-        border-radius: 12px !important;
-        height: 45px;
+        margin-bottom: 15px; 
     }
 
-    /* Luksusowy przycisk - pełna szerokość na telefonie */
+    /* 4. Styl bąbelków czatu - luksusowy ciemny szary */
+    [data-testid="stChatMessageAssistant"] {
+        background-color: #111111 !important;
+        border: 1px solid #d97706 !important;
+        border-radius: 15px !important;
+    }
+
+    [data-testid="stChatMessageUser"] {
+        background-color: #262626 !important;
+        border: 1px solid #444444 !important;
+        border-radius: 15px !important;
+    }
+
+    /* 5. Przycisk - złoty, widoczny na telefonie */
     .stButton>button { 
         width: 100%; 
         background: #fbbf24 !important; 
-        color: #000 !important; 
+        color: #000000 !important; 
         border: none !important;
         border-radius: 12px !important; 
         font-weight: 800 !important;
-        text-transform: uppercase;
-        letter-spacing: 1px;
         height: 50px !important;
-        transition: 0.3s;
     }
-    
-    /* Ukrywamy zbędne elementy Streamlit, żeby nie było widać, że to darmowy hosting */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
-    
-    /* Styl bąbelków czatu - mniejsza czcionka na telefon */
-    .stChatMessage { 
-        background-color: #1a1a1a !important; 
+
+    /* 6. Naprawa pola tekstowego na dole */
+    .stChatInput textarea {
+        color: #ffffff !important;
+        background-color: #1a1a1a !important;
         border: 1px solid #333 !important;
-        border-radius: 15px !important;
-        font-size: 14px !important;
     }
+
+    /* Ukrycie zbędnych elementów Streamlit */
+    #MainMenu, footer, header { visibility: hidden; }
+    .block-container { padding-top: 2rem !important; }
     </style>
     """, unsafe_allow_html=True)
 
