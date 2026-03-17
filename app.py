@@ -3,48 +3,26 @@ from openai import OpenAI
 import base64
 
 # --- 1. KONFIGURACJA STRONY ---
-st.set_page_config(page_title="EduAI DeepTrace", page_icon="🦖", layout="centered")
+st.set_page_config(page_title="DeepTrace", page_icon="🦖", layout="centered")
 
 # --- 2. TWÓJ LUKSUSOWY CSS ---
 st.markdown("""
     <style>
-    .stApp { 
-        background: radial-gradient(circle at center, #1a1a1a, #050505); 
-        color: #e5e5e5; 
-    }
-    .main-title { 
-        font-family: 'Georgia', serif; 
-        font-size: 3.5rem; 
-        background: linear-gradient(90deg, #fbbf24, #d97706, #fbbf24); 
-        -webkit-background-clip: text; 
-        -webkit-text-fill-color: transparent; 
-        text-align: center; 
-        margin-bottom: 20px; 
-    }
-    .stButton>button { 
-        width: 100%; 
-        background: transparent; 
-        color: #fbbf24 !important; 
-        border: 1px solid #fbbf24 !important; 
-        border-radius: 10px; 
-        height: 3em;
-        font-weight: bold;
-    }
-    .stButton>button:hover { 
-        background: #fbbf24 !important; 
-        color: #000 !important; 
-        box-shadow: 0 0 20px rgba(251, 191, 36, 0.4); 
-    }
-    /* Stylizacja inputu */
-    .stTextInput>div>div>input {
-        background-color: #121212;
-        color: #fbbf24;
-        border: 1px solid #333;
-    }
+    .block-container { padding-top: 1rem; padding-bottom: 1rem; }
+    .stApp { background: radial-gradient(circle at center, #1a1a1a, #050505); color: #e5e5e5; }
+    [data-testid="stSidebar"] { background-color: #0a0a0a !important; border-right: 2px solid #fbbf24; }
+    .main-title { font-family: 'Georgia', serif; font-size: 3.5rem; background: linear-gradient(90deg, #fbbf24, #d97706, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; margin-bottom: 20px; }
+    .stButton>button { width: 100%; height: 3em; background: transparent; color: #fbbf24 !important; border: 1px solid #fbbf24 !important; border-radius: 10px; font-weight: bold; }
+    .stButton>button:hover { background: #fbbf24 !important; color: #000 !important; box-shadow: 0 0 20px rgba(251, 191, 36, 0.4); }
+    .stChatMessage { font-size: 14px; border-radius: 15px; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. BRAMKA DOSTĘPU (Zamiast Firebase) ---
+# Funkcja do obrazów
+def encode_image(image_file):
+    return base64.b64encode(image_file.getvalue()).decode('utf-8')
+
+# --- 3. PROSTA I NIEZAWODNA BRAMKA LOGOWANIA ---
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
@@ -59,44 +37,59 @@ if not st.session_state.authenticated:
             st.session_state.authenticated = True
             st.rerun()
         else:
-            st.error("Dostęp zabroniony. Nieprawidłowy klucz.")
+            st.error("Dostęp zabroniony.")
 else:
-    # --- 4. GŁÓWNY INTERFEJS DEEPTRACE ---
-    st.markdown('<h1 class="main-title">DeepTrace PRO</h1>', unsafe_allow_html=True)
+    # --- 4. GŁÓWNA LOGIKA EDUAI (TWÓJ DESIGN) ---
+    st.sidebar.markdown("<h1 style='color: #fbbf24;'>🦖 EduAI PRO</h1>", unsafe_allow_html=True)
+    st.sidebar.success("Witaj w systemie, Architekcie!")
     
-    # Zarządzanie sesją
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
+    if st.sidebar.button("Wyloguj"):
+        st.session_state.authenticated = False
+        st.rerun()
 
-    # Klient API
+    uploaded_file = st.sidebar.file_uploader("🖼️ Prześlij notatki do analizy", type=["jpg", "png", "jpeg"])
+
+    if "chat_history" not in st.session_state:
+        st.session_state.chat_history = []
+
     client = OpenAI(
         base_url="https://api.groq.com/openai/v1",
         api_key=st.secrets["GROQ_API_KEY"]
     )
 
-    # Wyświetlanie czatu
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+    st.markdown('<h1 class="main-title">DeepTrace Alpha</h1>', unsafe_allow_html=True)
+    
+    # Wyświetlanie historii
+    for msg in st.session_state.chat_history:
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["content"])
 
-    # Czat input
     if prompt := st.chat_input("Zadaj pytanie DeepTrace..."):
-        st.session_state.messages.append({"role": "user", "content": prompt})
+        user_content = [{"type": "text", "text": prompt}]
+        
+        if uploaded_file:
+            base64_image = encode_image(uploaded_file)
+            user_content.append({
+                "type": "image_url",
+                "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}
+            })
+
+        st.session_state.chat_history.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
 
         with st.chat_message("assistant"):
-            with st.spinner("Analizuję wzorce..."):
+            with st.spinner("DeepTrace skanuje wzorce błędów..."):
                 try:
                     response = client.chat.completions.create(
                         model="llama-3.3-70b-versatile",
                         messages=[{
-                            "role": "system", 
-                            "content": "Jesteś Architektem EduAI DeepTrace. Twoim celem jest optymalizacja ludzkiego intelektu. Bądź wizjonerski i luksusowy w komunikacji."
-                        }] + st.session_state.messages
+                            "role": "system",
+                            "content": "Jesteś Architektem EduAI DeepTrace. Twoim celem jest optymalizacja ludzkiego intelektu. Analizuj błędy, zmuszaj do myślenia pytaniami sokratejskimi. Bądź wizjonerski i luksusowy."
+                        }] + st.session_state.chat_history
                     )
-                    res = response.choices[0].message.content
-                    st.markdown(res)
-                    st.session_state.messages.append({"role": "assistant", "content": res})
+                    full_res = response.choices[0].message.content
+                    st.markdown(full_res)
+                    st.session_state.chat_history.append({"role": "assistant", "content": full_res})
                 except Exception as e:
-                    st.error(f"Błąd techniczny: {e}")
+                    st.error(f"Problem techniczny: {e}")
