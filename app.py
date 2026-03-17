@@ -18,7 +18,7 @@ st.markdown("""
 # --- 3. LOGIKA DOSTĘPU (NAFFY SYNC) ---
 VIP_DATABASE = {
     "admin@eduai.pl": "RUM2026",
-    "igorskubis1@gmail.com": "TWOJE_HASLO_TUTAJ",  # Dopisujesz siebie
+    "igorskubis1@gmail.com": "dinozaur",  # Dopisujesz siebie
     "klient@naffy.pl": "VIP-7788"
 }
 
