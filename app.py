@@ -16,10 +16,10 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # --- 3. LOGIKA DOSTĘPU (NAFFY SYNC) ---
-# Tutaj ręcznie lub półautomatycznie dodajesz klientów z Naffy
 VIP_DATABASE = {
     "admin@eduai.pl": "RUM2026",
-    "klient@naffy.pl": "VIP-7788" # Przykładowy klient
+    "igorskubis1@gmail.com": "TWOJE_HASLO_TUTAJ",  # Dopisujesz siebie
+    "klient@naffy.pl": "VIP-7788"
 }
 
 if "authenticated" not in st.session_state:
