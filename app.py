@@ -25,7 +25,6 @@ st.markdown("""
     }
     </style>
     """, unsafe_allow_html=True)
-import streamlit_authenticator as stauth
 from openai import OpenAI
 import uuid
 import base64
