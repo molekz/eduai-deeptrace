@@ -22,23 +22,72 @@ st.markdown("""
 def encode_image(image_file):
     return base64.b64encode(image_file.getvalue()).decode('utf-8')
 
-# --- 3. PROSTA I NIEZAWODNA BRAMKA LOGOWANIA ---
-if "authenticated" not in st.session_state:
-    st.session_state.authenticated = False
+# --- 3. SYSTEM LOGOWANIA I REJESTRACJI (FIREBASE) ---
+from streamlit_firebase import firebase_auth
 
-if not st.session_state.authenticated:
-    st.markdown('<h1 class="main-title">DEEPTRACE ALPHA</h1>', unsafe_allow_html=True)
-    st.write("Wprowadź klucz dostępu do swojego imperium:")
+config = {
+    "apiKey": "AIzaSyA_3uiR7tjzhh8RV34UXhSf4e1fgfQV4Hs",
+    "authDomain": "eduai-pl.firebaseapp.com",
+    "projectId": "eduai-pl",
+    "storageBucket": "eduai-pl.firebasestorage.app",
+    "messagingSenderId": "197620737284",
+    "appId": "1:197620737284:web:406ed906d7e0194d4bdc51"
+}
+
+# Wyświetla formularz logowania/rejestracji
+user_data = firebase_auth(config)
+
+if user_data:
+    # --- 4. GŁÓWNA LOGIKA EDUAI PO ZALOGOWANIU ---
+    st.sidebar.markdown("<h1 style='color: #fbbf24;'>🦖 EduAI PRO</h1>", unsafe_allow_html=True)
+    st.sidebar.success(f"Zalogowano: {user_data['email']}")
     
-    password = st.text_input("PASSWORD", type="password", label_visibility="collapsed")
+    if st.sidebar.button("Wyloguj"):
+        # Firebase automatycznie obsłuży sesję, ale to odświeży stronę
+        st.rerun()
+
+    uploaded_file = st.sidebar.file_uploader("🖼️ Prześlij notatki do analizy", type=["jpg", "png", "jpeg"])
+
+    if "chat_history" not in st.session_state:
+        st.session_state.chat_history = []
+
+    client = OpenAI(
+        base_url="https://api.groq.com/openai/v1",
+        api_key=st.secrets["GROQ_API_KEY"]
+    )
+
+    st.markdown('<h1 class="main-title">DeepTrace Alpha</h1>', unsafe_allow_html=True)
     
-    if st.button("AUTORYZACJA"):
-        if password == "rum2026":
-            st.session_state.authenticated = True
-            st.rerun()
-        else:
-            st.error("Dostęp zabroniony.")
+    # Wyświetlanie historii
+    for msg in st.session_state.chat_history:
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["content"])
+
+    if prompt := st.chat_input("Zadaj pytanie DeepTrace..."):
+        st.session_state.chat_history.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
+
+        with st.chat_message("assistant"):
+            with st.spinner("DeepTrace skanuje wzorce błędów..."):
+                try:
+                    response = client.chat.completions.create(
+                        model="llama-3.3-70b-versatile",
+                        messages=[{
+                            "role": "system",
+                            "content": "Jesteś Architektem EduAI DeepTrace. Twoim celem jest optymalizacja ludzkiego intelektu. Analizuj błędy, zmuszaj do myślenia pytaniami sokratejskimi. Bądź wizjonerski i luksusowy."
+                        }] + st.session_state.chat_history
+                    )
+                    full_res = response.choices[0].message.content
+                    st.markdown(full_res)
+                    st.session_state.chat_history.append({"role": "assistant", "content": full_res})
+                except Exception as e:
+                    st.error(f"Problem techniczny: {e}")
 else:
+    # Widok dla niezalogowanego
+    st.markdown('<h1 class="main-title">DeepTrace Alpha</h1>', unsafe_allow_html=True)
+    st.info("System wymaga autoryzacji. Zaloguj się lub załóż konto, aby kontynuować budowę imperium.")
+
     # --- 4. GŁÓWNA LOGIKA EDUAI (TWÓJ DESIGN) ---
     st.sidebar.markdown("<h1 style='color: #fbbf24;'>🦖 EduAI PRO</h1>", unsafe_allow_html=True)
     st.sidebar.success("Witaj w systemie, Architekcie!")
