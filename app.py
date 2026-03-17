@@ -1,7 +1,15 @@
 import streamlit as st
 from openai import OpenAI
-import base64
-from streamlit_firebase import firebase_auth
+import firebase_admin
+from firebase_admin import credentials, auth
+
+# Sprawdzenie, czy Firebase już działa, żeby nie wywaliło błędu przy odświeżaniu
+if not firebase_admin._apps:
+    # Tutaj docelowo wrzucimy Twoje klucze, ale na razie chcemy, żeby aplikacja WSTAŁA
+    pass 
+
+st.title("EduAI DeepTrace - System Aktywny")
+st.write("Jeśli to widzisz, to znaczy, że pokonaliśmy błąd instalacji!")
 
 # --- 1. KONFIGURACJA STRONY (Musi być na samej górze!) ---
 st.set_page_config(page_title="EduAI DeepTrace", page_icon="🦖", layout="centered")
