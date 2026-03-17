@@ -49,14 +49,32 @@ credentials = {
     }
 }
 
-authenticator = stauth.Authenticate(
-    credentials,
-    "eduai_cookie",
-    "signature_key",
-    cookie_expiry_days=30
-)
+import streamlit as st
+from streamlit_firebase_auth import firebase_auth
 
-authenticator.login(key='Login_Form_Unique')
+# TWOJE DIAMENTY Z FIREBASE
+config = {
+    "apiKey": "AIzaSyA_3uiR7tjzhh8RV34UXhSf4e1fgfQV4Hs",
+    "authDomain": "eduai-pl.firebaseapp.com",
+    "projectId": "eduai-pl",
+    "storageBucket": "eduai-pl.firebasestorage.app",
+    "messagingSenderId": "197620737284",
+    "appId": "1:197620737284:web:406ed906d7e0194d4bdc51"
+}
+
+# TO ODPALA BRAMKĘ DLA UŻYTKOWNIKA
+user_data = firebase_auth(config)
+
+if user_data:
+    st.write(f"Zalogowano jako: {user_data['email']}")
+    
+    # TUTAJ WKLEJ CAŁY SWÓJ STARY KOD PROMETEUSZA
+    st.title("EduAI Premium - Twoja nauka przyszłości")
+    # ... twój kod czatu ...
+    
+else:
+    st.warning("Dostęp zablokowany. Zaloguj się, aby kontynuować.")
+    st.info("Jako twórca, możesz teraz założyć pierwsze konto testowe!")
 
 # --- 3. STATUS PREMIUM ---
 is_premium = False
