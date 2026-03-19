@@ -3,10 +3,18 @@ import pyrebase
 from openai import OpenAI
 import base64
 
-# --- 1. KONFIGURACJA STRONY ---
+# --- 1. LISTA OSÓB Z DOSTĘPEM (BRAMKARZ) ---
+# TUTAJ DOPISUJESZ MAILE KLIENTÓW PO ZAKUPIE
+OPLACONE_MAILE = [
+    "admin@eduai.pl",
+    "igorskubis1@gmail.com",
+    "kerwinjan5@gmail.com"  # Twój mail testowy
+]
+
+# --- 2. KONFIGURACJA STRONY ---
 st.set_page_config(page_title="DeepTrace", page_icon="🦖", layout="centered")
 
-# --- 2. DESIGN MOBILE-FIRST (ZŁOTO I CZIEŃ) ---
+# --- 3. DESIGN MOBILE-FIRST (ZŁOTO I CZIEŃ) ---
 st.markdown("""
     <style>
     .stApp { 
@@ -56,7 +64,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. KONFIGURACJA FIREBASE ---
+# --- 4. KONFIGURACJA FIREBASE ---
 firebase_config = {
     "apiKey": "AIzaSyA_3uiR7tjzhh8RV34UXhSf4e1fgfQV4Hs",
     "authDomain": "eduai-pl.firebaseapp.com",
@@ -73,7 +81,7 @@ auth = firebase.auth()
 if "user" not in st.session_state:
     st.session_state.user = None
 
-# --- 4. LOGIKA AUTORYZACJI ---
+# --- 5. LOGIKA AUTORYZACJI ---
 if st.session_state.user is None:
     st.markdown('<h1 class="main-title">DEEPTRACE ALPHA</h1>', unsafe_allow_html=True)
     
@@ -84,22 +92,20 @@ if st.session_state.user is None:
         pass_log = st.text_input("Hasło", type="password", key="log_pass")
         
         if st.button("ZALOGUJ"):
-            # --- TO JEST TWÓJ MUR OBRONNY ---
+            # --- SPRAWDZANIE BIAŁEJ LISTY ---
             if email_log not in OPLACONE_MAILE:
                 st.error("Brak aktywnej subskrypcji dla tego e-maila. Kup dostęp na Naffy!")
-                # Tutaj zatrzymujemy kod, nie pozwalamy iść dalej do Firebase
             else:
                 try:
-                    # Dopiero jeśli mail jest na liście, pytamy Firebase o hasło
                     user = auth.sign_in_with_email_and_password(email_log, pass_log)
                     st.session_state.user = user
                     st.rerun()
                 except:
-                    st.error("Błędne hasło. Spróbuj ponownie.")
+                    st.error("Błędne hasło lub użytkownik nie istnieje.")
                 
     with tab2:
         st.write("Użyj e-maila z zakupu na Naffy:")
-        email_reg = st.text_input("E-mail", key="reg_email")
+        email_reg = st.text_input("E-mail", key="reg_email").strip().lower()
         pass_reg = st.text_input("Wymyśl hasło (min. 6 znaków)", type="password", key="reg_pass")
         if st.button("STWÓRZ KONTO"):
             try:
@@ -109,7 +115,7 @@ if st.session_state.user is None:
                 st.error(f"Błąd: {e}")
 
 else:
-    # --- 5. INTERFEJS CZATU (ZALOGOWANY) ---
+    # --- 6. INTERFEJS CZATU (ZALOGOWANY) ---
     st.sidebar.markdown("<h1 style='color: #fbbf24;'>🦖 EduAI PRO</h1>", unsafe_allow_html=True)
     st.sidebar.info(f"Aktywny: {st.session_state.user['email']}")
     
