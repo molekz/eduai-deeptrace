@@ -80,15 +80,22 @@ if st.session_state.user is None:
     tab1, tab2 = st.tabs(["Logowanie", "Rejestracja"])
     
     with tab1:
-        email_log = st.text_input("E-mail", key="log_email")
+        email_log = st.text_input("E-mail", key="log_email").strip().lower()
         pass_log = st.text_input("Hasło", type="password", key="log_pass")
+        
         if st.button("ZALOGUJ"):
-            try:
-                user = auth.sign_in_with_email_and_password(email_log, pass_log)
-                st.session_state.user = user
-                st.rerun()
-            except:
-                st.error("Błędne dane logowania.")
+            # --- TO JEST TWÓJ MUR OBRONNY ---
+            if email_log not in OPLACONE_MAILE:
+                st.error("Brak aktywnej subskrypcji dla tego e-maila. Kup dostęp na Naffy!")
+                # Tutaj zatrzymujemy kod, nie pozwalamy iść dalej do Firebase
+            else:
+                try:
+                    # Dopiero jeśli mail jest na liście, pytamy Firebase o hasło
+                    user = auth.sign_in_with_email_and_password(email_log, pass_log)
+                    st.session_state.user = user
+                    st.rerun()
+                except:
+                    st.error("Błędne hasło. Spróbuj ponownie.")
                 
     with tab2:
         st.write("Użyj e-maila z zakupu na Naffy:")
